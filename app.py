@@ -21,4 +21,8 @@ def predict():
     return jsonify({"predictions": predictions.tolist()})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    import sys
+    port = 5000
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1].split('=')[1])
+    app.run(host='0.0.0.0', port=port)
