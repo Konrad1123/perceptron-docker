@@ -1,14 +1,28 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+import numpy as np
+from sklearn.linear_model import Perceptron
 
-# Create a Flask app
 app = Flask(__name__)
+model = Perceptron()
 
-# Create an API end point
-@app.route('/')
-def say_hello():
-    return "Hello World"
+@app.route('/train', methods=['POST'])
+def train():
+    data = request.json
+    X = np.array(data['X'])
+    y = np.array(data['y'])
+    model.fit(X, y)
+    return jsonify({"message": "Model trained!"})
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    data = request.json
+    X = np.array(data['X'])
+    predictions = model.predict(X)
+    return jsonify({"predictions": predictions.tolist()})
 
 if __name__ == '__main__':
-    app.run()  # Defaults to localhost and port 5000
-    # app.run(host='0.0.0.0', port=8000)
-
+    import sys
+    port = 8000
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1].split('=')[1])
+    app.run(host='0.0.0.0', port=port)
