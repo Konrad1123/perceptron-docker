@@ -1,14 +1,10 @@
-FROM python:3.11-slim-buster
+FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY . /app
 
-COPY app.py .
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENV FLASK_APP=app
-EXPOSE 8000
-CMD ["python", "app.py", "--port=5001"]
-
+CMD ["python", "app.py"]
 
